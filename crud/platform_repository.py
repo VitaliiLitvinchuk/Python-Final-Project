@@ -24,6 +24,16 @@ class PlatformRepository:
         result = await self.session.execute(query)
         return result.scalar()
 
+    async def get_platforms_by_ids(self, ids: List[int]) -> List[Platform]:
+        query = select(Platform).where(Platform.id.in_(ids))
+        result = await self.session.execute(query)
+        return list(result.scalars().all())
+
+    async def get_all_platforms_ids(self) -> List[int]:
+        query = select(Platform.id)
+        result = await self.session.execute(query)
+        return [x[0] for x in result.all()]
+
     async def create_platform(
         self, name: str, base_url: str, search_url_template: Optional[str] = None
     ) -> Platform:

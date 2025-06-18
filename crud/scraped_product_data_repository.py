@@ -20,6 +20,30 @@ class ScrapedProductDataRepository:
         result = await self.session.execute(query)
         return result.scalar()
 
+    async def get_by_product_id(self, product_id: int) -> List[ScrapedProductData]:
+        query = select(ScrapedProductData).where(
+            ScrapedProductData.product_id == product_id
+        )
+        result = await self.session.execute(query)
+        return list(result.scalars().all())
+
+    async def get_by_platform_id(self, platform_id: int) -> List[ScrapedProductData]:
+        query = select(ScrapedProductData).where(
+            ScrapedProductData.platform_id == platform_id
+        )
+        result = await self.session.execute(query)
+        return list(result.scalars().all())
+
+    async def get_by_platform_id_product_id(
+        self, platform_id: int, product_id: int
+    ) -> List[ScrapedProductData]:
+        query = select(ScrapedProductData).where(
+            ScrapedProductData.platform_id == platform_id,
+            ScrapedProductData.product_id == product_id,
+        )
+        result = await self.session.execute(query)
+        return list(result.scalars().all())
+
     async def create_scraped_product_data(
         self,
         product_id: int,
@@ -54,6 +78,29 @@ class ScrapedProductDataRepository:
         await self.session.commit()
         await self.session.refresh(scraped_data)
         return scraped_data
+
+    async def bulk_create_scraped_product_data(
+        self, data: List
+    ) -> List[ScrapedProductData]:
+        values = [
+            {
+                "product_id": int(item.product_id),
+                "platform_id": int(item.platform_id),
+                "url_on_platform": item.url_on_platform,
+                "name_on_platform": item.name_on_platform,
+                "price": Decimal(str(item.price)),
+                "currency": item.currency,
+                "rating": float(item.rating),
+                "reviews_count": int(item.reviews_count),
+                "availability_status": item.availability_status,
+                "search_position": int(item.search_position),
+            }
+            for item in data
+        ]
+        query = insert(ScrapedProductData).values(values).returning(ScrapedProductData)
+        result = await self.session.execute(query)
+        await self.session.commit()
+        return list(result.scalars().all())
 
     async def update_scraped_product_data(
         self,

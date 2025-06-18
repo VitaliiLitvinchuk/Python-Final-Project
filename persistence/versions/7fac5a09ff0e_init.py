@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 06803ccd22bc
+Revision ID: 7fac5a09ff0e
 Revises: 
-Create Date: 2025-06-08 14:14:03.941312
+Create Date: 2025-06-09 12:38:13.147408
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '06803ccd22bc'
+revision: str = '7fac5a09ff0e'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -25,7 +25,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=100), nullable=False),
     sa.Column('base_url', sa.String(length=255), nullable=False),
-    sa.Column('search_url_template', sa.String(length=512), nullable=True),
+    sa.Column('search_url_template', sa.String(length=512), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_platforms_name'), 'platforms', ['name'], unique=True)
@@ -42,8 +42,8 @@ def upgrade() -> None:
     sa.Column('target_variable', sa.String(length=100), nullable=False),
     sa.Column('feature_variables', sa.JSON(), nullable=False),
     sa.Column('coefficients_json', sa.JSON(), nullable=False),
-    sa.Column('intercept', sa.Float(), nullable=True),
-    sa.Column('r_squared', sa.Float(), nullable=True),
+    sa.Column('intercept', sa.Float(), nullable=False),
+    sa.Column('r_squared', sa.Float(), nullable=False),
     sa.Column('last_trained_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('platform_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['platform_id'], ['platforms.id'], ),
@@ -56,12 +56,12 @@ def upgrade() -> None:
     sa.Column('platform_id', sa.Integer(), nullable=False),
     sa.Column('url_on_platform', sa.String(length=1024), nullable=False),
     sa.Column('name_on_platform', sa.String(length=512), nullable=False),
-    sa.Column('price', sa.Numeric(precision=10, scale=2), nullable=True),
-    sa.Column('currency', sa.String(length=10), nullable=True),
-    sa.Column('rating', sa.Float(), nullable=True),
-    sa.Column('reviews_count', sa.Integer(), nullable=True),
-    sa.Column('availability_status', sa.String(length=100), nullable=True),
-    sa.Column('search_position', sa.Integer(), nullable=True),
+    sa.Column('price', sa.Numeric(precision=10, scale=2), nullable=False),
+    sa.Column('currency', sa.String(length=10), nullable=False),
+    sa.Column('rating', sa.Float(), nullable=False),
+    sa.Column('reviews_count', sa.Integer(), nullable=False),
+    sa.Column('availability_status', sa.String(length=100), nullable=False),
+    sa.Column('search_position', sa.Integer(), nullable=False),
     sa.Column('scraped_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['platform_id'], ['platforms.id'], ),
     sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),

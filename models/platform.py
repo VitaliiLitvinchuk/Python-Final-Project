@@ -1,7 +1,7 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from typing import List, Optional
+from typing import List
 
 from .base import Base
 
@@ -19,7 +19,7 @@ class Platform(Base):
         String(100), unique=True, nullable=False, index=True
     )
     base_url: Mapped[str] = mapped_column(String(255), nullable=False)
-    search_url_template: Mapped[Optional[str]] = mapped_column(String(512))
+    search_url_template: Mapped[str] = mapped_column(String(512), nullable=False)
 
     scraped_data: Mapped[List["ScrapedProductData"]] = relationship(  # noqa: F821 # type: ignore
         back_populates="platform", cascade="all, delete-orphan"

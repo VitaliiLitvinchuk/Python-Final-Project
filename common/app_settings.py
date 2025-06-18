@@ -1,4 +1,6 @@
 from pydantic import Field
+from typing import Annotated
+from fastapi import Depends
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -10,3 +12,6 @@ class AppSettings(BaseSettings):
 
 
 settings = AppSettings.model_validate({})
+
+
+AppSettingsDependency = Annotated[AppSettings, Depends(lambda: settings)]

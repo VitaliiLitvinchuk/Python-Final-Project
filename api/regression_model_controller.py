@@ -1,10 +1,22 @@
 from fastapi import APIRouter
+from common.services.regression_service import RegressionAnalysisServiceDependency
 from crud.regression_model_repository import RegressionModelRepositoryDependency
 from schemas.regression_model_schema import RegressionModelSchema
 
 regression_model_router = APIRouter(
     prefix="/regression-models", tags=["regression models"]
 )
+
+
+@regression_model_router.post("/train", summary="Train new regression model")
+async def train_regression_model(
+    regression_model_repository: RegressionAnalysisServiceDependency,
+    platform_id: int,
+    product_id: int,
+):
+    return await regression_model_repository.train_regression_model(
+        platform_id, product_id
+    )
 
 
 @regression_model_router.post("", summary="Create new regression model")

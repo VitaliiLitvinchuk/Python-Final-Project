@@ -1,5 +1,4 @@
 from typing import Annotated
-from anyio import sleep
 from fastapi import Depends, HTTPException
 from common.app_settings import AppSettingsDependency
 from google import genai
@@ -17,7 +16,6 @@ class GenaiService:
                 page = await browser.new_page()
                 await page.goto(url, timeout=60_000)
                 await page.wait_for_load_state("networkidle")
-                await sleep(10)
 
                 html_content = await page.content()
                 await browser.close()

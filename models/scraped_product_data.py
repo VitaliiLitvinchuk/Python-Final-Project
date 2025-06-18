@@ -1,4 +1,3 @@
-from typing import Optional
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, Numeric, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -28,13 +27,13 @@ class ScrapedProductData(Base):
     url_on_platform: Mapped[str] = mapped_column(String(1024), nullable=False)
     name_on_platform: Mapped[str] = mapped_column(String(512), nullable=False)
 
-    price: Mapped[Optional[Decimal]] = mapped_column(Numeric(10, 2))
-    currency: Mapped[Optional[str]] = mapped_column(String(10))
+    price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
+    currency: Mapped[str] = mapped_column(String(10), nullable=False)
 
-    rating: Mapped[Optional[float]] = mapped_column(Float)
-    reviews_count: Mapped[Optional[int]] = mapped_column(Integer)
-    availability_status: Mapped[Optional[str]] = mapped_column(String(100))
-    search_position: Mapped[Optional[int]] = mapped_column(Integer)
+    rating: Mapped[float] = mapped_column(Float, nullable=False)
+    reviews_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    availability_status: Mapped[str] = mapped_column(String(100), nullable=False)
+    search_position: Mapped[int] = mapped_column(Integer, nullable=False)
 
     scraped_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()

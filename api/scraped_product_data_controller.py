@@ -32,6 +32,26 @@ async def get_scraped_product_data_by_id(
     return await scraped_product_data_repository.get_by_id(data_id)
 
 
+@scraped_product_data_router.get(
+    "/product/{product_id}", summary="Get all scraped product data by product id"
+)
+async def get_scraped_product_data_by_product_id(
+    scraped_product_data_repository: ScrapedProductDataRepositoryDependency,
+    product_id: int,
+):
+    return await scraped_product_data_repository.get_by_product_id(product_id)
+
+
+@scraped_product_data_router.get(
+    "/platform/{platform_id}", summary="Get all scraped product data by platform id"
+)
+async def get_scraped_product_data_by_platform_id(
+    scraped_product_data_repository: ScrapedProductDataRepositoryDependency,
+    platform_id: int,
+):
+    return await scraped_product_data_repository.get_by_platform_id(platform_id)
+
+
 @scraped_product_data_router.put(
     "/{data_id}", summary="Update scraped product data by id"
 )

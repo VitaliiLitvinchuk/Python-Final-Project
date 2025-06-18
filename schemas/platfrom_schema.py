@@ -19,8 +19,8 @@ class PlatformSchema(BaseModel):
     ) -> Optional[HttpUrl]:
         if value and len(str(value)) > 512:
             raise ValueError("Шаблон URL пошуків не повинен перевищувати 512 символів")
-        if value and "{query}" not in str(value):
-            raise ValueError("Шаблон URL пошуків повинен містити {query}")
+        if value and "{search}" not in str(value):
+            raise ValueError("Шаблон URL пошуків повинен містити {search}")
         return value
 
     class Config:
