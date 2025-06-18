@@ -1,10 +1,9 @@
 from typing import Annotated
 from fastapi import Depends
-from sklearn.linear_model import LinearRegression
+import statsmodels.api as sm
 import pandas as pd
-
-from crud.scraped_product_data_repository import ScrapedProductDataRepositoryDependency
 from crud.regression_model_repository import RegressionModelRepositoryDependency
+from crud.scraped_product_data_repository import ScrapedProductDataRepositoryDependency
 from models.regression_model import RegressionModel
 
 
@@ -42,18 +41,23 @@ class RegressionAnalysisService:
         )
 
         X = df[["price", "rating", "reviews_count"]]
+        X = sm.add_constant(X)
+
         y = df["search_position"]
 
-        model = LinearRegression()
-        model.fit(X, y)
+        model = sm.OLS(y, X).fit()
+
+        intercept = model.params["const"]
+        coefficients = {key: val for key, val in model.params.items() if key != "const"}
+        r_squared = model.rsquared
 
         regression_model = RegressionModel(
             name=f"Regression for platform {platform_id}",
             target_variable="search_position",
-            feature_variables=["price", "rating", "reviews_count"],
-            coefficients_json=dict(zip(X.columns, model.coef_)),
-            intercept=float(model.intercept_),
-            r_squared=float(model.score(X, y)),
+            feature_variables=list(coefficients.keys()),
+            coefficients_json=coefficients,
+            intercept=intercept,
+            r_squared=r_squared,
             platform_id=platform_id,
         )
 
@@ -65,6 +69,5 @@ class RegressionAnalysisService:
 
 
 RegressionAnalysisServiceDependency = Annotated[
-    RegressionAnalysisService,
-    Depends(RegressionAnalysisService),
+    RegressionAnalysisService, Depends(RegressionAnalysisService)
 ]
