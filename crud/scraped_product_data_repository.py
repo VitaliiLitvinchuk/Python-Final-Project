@@ -153,8 +153,7 @@ class ScrapedProductDataRepository:
             .where(ScrapedProductData.id == id)
             .returning(ScrapedProductData)
         )
-        result = await self.session.execute(query)
-        scraped_data = result.scalar()
+        await self.session.execute(query)
         await self.session.commit()
         return scraped_data
 

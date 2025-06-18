@@ -88,8 +88,7 @@ class PlatformRepository:
             raise ValueError(f"Platform with id {id} not found")
 
         query = delete(Platform).where(Platform.id == id).returning(Platform)
-        result = await self.session.execute(query)
-        platform = result.scalar()
+        await self.session.execute(query)
         await self.session.commit()
         return platform
 

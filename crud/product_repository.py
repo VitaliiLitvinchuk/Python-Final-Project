@@ -58,8 +58,7 @@ class ProductRepository:
             raise ValueError(f"Product with id {id} not found")
 
         query = delete(Product).where(Product.id == id).returning(Product)
-        result = await self.session.execute(query)
-        product = result.scalar()
+        await self.session.execute(query)
         await self.session.commit()
         return product
 

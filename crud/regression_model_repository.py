@@ -93,8 +93,7 @@ class RegressionModelRepository:
             .where(RegressionModel.id == id)
             .returning(RegressionModel)
         )
-        result = await self.session.execute(query)
-        regression_model = result.scalar()
+        await self.session.execute(query)
         await self.session.commit()
         return regression_model
 
